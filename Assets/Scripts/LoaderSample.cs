@@ -74,10 +74,8 @@ namespace WebglVGltfSample
 
         static async UniTask<GltfResource> LoadGltf(Stream s)
         {
-            Debug.Log("LoadGltf");
             var gltfContainer = GltfContainer.FromGlb(s); // Task cannot be used on WebGL platform...
 
-            Debug.Log("gltfContainer");
             var res = new GltfResource();
             try
             {
@@ -98,7 +96,6 @@ namespace WebglVGltfSample
                     res.Context = await gltfImporter.ImportSceneNodes(System.Threading.CancellationToken.None);
                 }
 
-                Debug.Log("imp");
                 foreach (var rootNodeIndex in gltfContainer.Gltf.RootNodesIndices)
                 {
                     var rootNode = res.Context.Resources.Nodes[rootNodeIndex];
@@ -112,21 +109,6 @@ namespace WebglVGltfSample
             }
 
             return res;
-        }
-
-        static async UniTask<MemoryStream> CreateNetworkStream(string url)
-        {
-            Debug.Log($"{url}");
-            using (var req = UnityWebRequest.Get(url))
-            {
-                await req.SendWebRequest();
-                if (req.isNetworkError || req.isHttpError)
-                {
-                    // throw new Exception($"Failed to load: url = {url}, error = {req.error}");
-                }
-
-                return new MemoryStream(req.downloadHandler.data);
-            }
         }
     }
 }
